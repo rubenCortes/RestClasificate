@@ -48,6 +48,7 @@ public class Categoria implements Serializable {
     private String nombre;
     @OneToMany(mappedBy = "categoria")
     private List<SubCategoria> subCategoriaList;
+    
 
     public Categoria() {
     }
@@ -85,7 +86,7 @@ public class Categoria implements Serializable {
     public void setSubCategoriaList(List<SubCategoria> subCategoriaList) {
         this.subCategoriaList = subCategoriaList;
     }
-
+    
     @Override
     public int hashCode() {
         int hash = 0;

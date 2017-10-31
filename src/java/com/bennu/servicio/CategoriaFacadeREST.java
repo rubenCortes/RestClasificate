@@ -6,6 +6,9 @@
 package com.bennu.servicio;
 
 import com.bennu.entidad.Categoria;
+import com.bennu.entidad.auxiliar.CategoriaSimple;
+import com.bennu.entidad.auxiliar.SubCategoriaSimple;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -57,16 +60,28 @@ public class CategoriaFacadeREST extends AbstractFacade<Categoria> {
 
     @GET
     @Path("{id}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public Categoria find(@PathParam("id") Integer id) {
         return super.find(id);
     }
 
     @GET
     @Override
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public List<Categoria> findAll() {
         return super.findAll();
+    }
+
+    @GET
+    @Path("simple")
+    @Produces({MediaType.APPLICATION_JSON})
+    public List<CategoriaSimple> getCategoriaListSimple() {
+        
+        List<CategoriaSimple> listaSimple = new ArrayList<>();
+        
+        this.findAll().forEach(categoria -> listaSimple.add(new CategoriaSimple(categoria)));
+        
+        return listaSimple;
     }
 
     @GET

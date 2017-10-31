@@ -6,6 +6,8 @@
 package com.bennu.servicio;
 
 import com.bennu.entidad.EstadoRegion;
+import com.bennu.entidad.auxiliar.EstadoRegionSimple;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -64,9 +66,21 @@ public class EstadoRegionFacadeREST extends AbstractFacade<EstadoRegion> {
 
     @GET
     @Override
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public List<EstadoRegion> findAll() {
         return super.findAll();
+    }
+    
+    @GET
+    @Path("simple")
+    @Produces({MediaType.APPLICATION_JSON})
+    public List<EstadoRegionSimple> getEstadoRegionListSimple() {
+        
+        List<EstadoRegionSimple> listaSimple = new ArrayList<>();
+        
+        this.findAll().forEach(estado -> listaSimple.add(new EstadoRegionSimple(estado)));
+        
+        return listaSimple;
     }
 
     @GET
