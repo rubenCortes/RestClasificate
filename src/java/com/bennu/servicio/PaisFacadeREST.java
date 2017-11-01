@@ -6,7 +6,6 @@
 package com.bennu.servicio;
 
 import com.bennu.entidad.Pais;
-import com.bennu.entidad.auxiliar.EstadoRegionSimple;
 import com.bennu.entidad.auxiliar.PaisSimple;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,17 +43,26 @@ public class PaisFacadeREST extends AbstractFacade<Pais> {
 
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.TEXT_PLAIN})
     public Response crear(Pais entity) {
         String nombrePais = entity.getNombre();
         ResponseBuilder respuesta;
         if (this.existePais(nombrePais)) {
             String mensaje = "Pais : " + nombrePais + " existe";
-            respuesta = Response.status(Status.CONFLICT).entity(mensaje).type(MediaType.TEXT_PLAIN);
+            respuesta = Response.status(Status.CONFLICT).entity(mensaje);
         } else {
             super.create(entity);
-            respuesta = Response.status(Status.CREATED).entity(this.buscarPais(nombrePais)).type(MediaType.APPLICATION_JSON);
+            List<Pais> resultado = this.buscarPais(nombrePais);
+            
+            if (resultado.size() > 0) {
+                String mensaje = "Pais: " + nombrePais + " creado satisfactoriamente.";
+                respuesta = Response.status(Status.CREATED).entity(mensaje);
+            } else {
+                String mensaje = "Pais: "+ nombrePais + " no encontrado, falla al guardar";
+                respuesta = Response.status(Status.NOT_FOUND).entity(mensaje);
+            }
+
         }
-        
         return respuesta.build();
     }
 
@@ -115,7 +123,6 @@ public class PaisFacadeREST extends AbstractFacade<Pais> {
                 String mensaje = "Pais : "+ nombre +" no encontrado";
                 respuesta = Response.status(Status.NOT_FOUND).entity(mensaje).type(MediaType.TEXT_PLAIN);
             }
-
 
             return respuesta.build();
         

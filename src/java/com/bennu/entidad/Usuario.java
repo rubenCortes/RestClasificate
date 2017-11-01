@@ -75,7 +75,7 @@ public class Usuario implements Serializable {
     @JoinColumn(name = "id_poblacion", referencedColumnName = "id_poblacion")
     @ManyToOne(optional = false)
     private Poblacion poblacion;
-    @OneToMany(mappedBy = "idUsuario")
+    @OneToMany(mappedBy = "usuario")
     private List<Mensaje> mensajeList;
 
     public Usuario() {

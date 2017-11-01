@@ -51,7 +51,7 @@ public class SubCategoria implements Serializable {
     @JoinColumn(name = "id_categoria", referencedColumnName = "id_categoria")
     @ManyToOne
     private Categoria categoria;
-    @OneToMany(mappedBy = "idSubCategoria")
+    @OneToMany(mappedBy = "subCategoria")
     private List<Mensaje> mensajeList;
 
     public SubCategoria() {

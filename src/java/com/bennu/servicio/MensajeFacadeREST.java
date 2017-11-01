@@ -6,6 +6,9 @@
 package com.bennu.servicio;
 
 import com.bennu.entidad.Mensaje;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -19,6 +22,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
+import javax.ws.rs.core.Response.Status;
 
 /**
  *
@@ -36,10 +42,14 @@ public class MensajeFacadeREST extends AbstractFacade<Mensaje> {
     }
 
     @POST
-    @Override
-    @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public void create(Mensaje entity) {
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.TEXT_PLAIN})
+    public Response crear(Mensaje entity) {
+        entity.setCreacion(Date.valueOf(LocalDate.now()));
         super.create(entity);
+        String mensaje = "Mensaje creado satisfactoriamente";
+        ResponseBuilder respuesta = Response.status(Status.CREATED).entity(mensaje);
+        return respuesta.build();
     }
 
     @PUT
@@ -47,24 +57,47 @@ public class MensajeFacadeREST extends AbstractFacade<Mensaje> {
     @Consumes({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
     public void edit(@PathParam("id") Integer id, Mensaje entity) {
         super.edit(entity);
+        
     }
 
     @DELETE
     @Path("{id}")
-    public void remove(@PathParam("id") Integer id) {
+    public Response borrar(@PathParam("id") Integer id) {
         super.remove(super.find(id));
+        ResponseBuilder respuesta;
+        if (super.find(id) == null) {
+            String mensaje = "Mensaje borrado satisfactoriamente.";
+            respuesta = Response.status(Status.OK).entity(mensaje);            
+        } else {
+            String mensaje = "Error al borrar el mensaje.";
+            respuesta = Response.status(Status.METHOD_NOT_ALLOWED).entity(mensaje);
+        }
+
+        return respuesta.build();
     }
 
     @GET
     @Path("{id}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Mensaje find(@PathParam("id") Integer id) {
-        return super.find(id);
+    public Response find(@PathParam("id") Integer id) {
+        
+        Mensaje mensaje = super.find(id);
+                    
+        ResponseBuilder respuesta;
+
+            if (mensaje != null) {
+                respuesta = Response.status(Status.OK).entity(mensaje).type(MediaType.APPLICATION_JSON);
+            } else {
+                String texto = "Mensaje no encontrado";
+                respuesta = Response.status(Status.NOT_FOUND).entity(texto).type(MediaType.TEXT_PLAIN);
+            }
+
+            return respuesta.build();
+        
     }
 
     @GET
     @Override
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public List<Mensaje> findAll() {
         return super.findAll();
     }

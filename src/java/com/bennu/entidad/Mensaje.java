@@ -59,10 +59,10 @@ public class Mensaje implements Serializable {
     private List<Imagen> imagenList;
     @JoinColumn(name = "id_sub_categoria", referencedColumnName = "id_sub_categoria")
     @ManyToOne
-    private SubCategoria idSubCategoria;
+    private SubCategoria subCategoria;
     @JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario")
     @ManyToOne
-    private Usuario idUsuario;
+    private Usuario usuario;
 
     public Mensaje() {
     }
@@ -109,20 +109,20 @@ public class Mensaje implements Serializable {
         this.imagenList = imagenList;
     }
 
-    public SubCategoria getIdSubCategoria() {
-        return idSubCategoria;
+    public SubCategoria getSubCategoria() {
+        return subCategoria;
     }
 
-    public void setIdSubCategoria(SubCategoria idSubCategoria) {
-        this.idSubCategoria = idSubCategoria;
+    public void setSubCategoria(SubCategoria subCategoria) {
+        this.subCategoria = subCategoria;
     }
 
-    public Usuario getIdUsuario() {
-        return idUsuario;
+    public Usuario getUsuario() {
+        return usuario;
     }
 
-    public void setIdUsuario(Usuario idUsuario) {
-        this.idUsuario = idUsuario;
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     @Override
