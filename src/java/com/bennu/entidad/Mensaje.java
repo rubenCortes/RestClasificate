@@ -38,7 +38,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Mensaje.findAll", query = "SELECT m FROM Mensaje m")
     , @NamedQuery(name = "Mensaje.findByIdMensaje", query = "SELECT m FROM Mensaje m WHERE m.idMensaje = :idMensaje")
     , @NamedQuery(name = "Mensaje.findByCreacion", query = "SELECT m FROM Mensaje m WHERE m.creacion = :creacion")
-    , @NamedQuery(name = "Mensaje.findByContenido", query = "SELECT m FROM Mensaje m WHERE m.contenido = :contenido")})
+    , @NamedQuery(name = "Mensaje.findByContenido", query = "SELECT m FROM Mensaje m WHERE m.contenido = :contenido")
+    , @NamedQuery(name = "Mensaje.findByUsuario", query = "SELECT m FROM Mensaje m WHERE m.usuario.idUsuario = :idUsuario")})
 public class Mensaje implements Serializable {
 
     private static final long serialVersionUID = 1L;

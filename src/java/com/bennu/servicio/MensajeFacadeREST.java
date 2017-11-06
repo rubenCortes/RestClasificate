@@ -6,6 +6,7 @@
 package com.bennu.servicio;
 
 import com.bennu.entidad.Mensaje;
+import com.bennu.entidad.Usuario;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -13,6 +14,7 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -102,6 +104,26 @@ public class MensajeFacadeREST extends AbstractFacade<Mensaje> {
         return super.findAll();
     }
 
+    
+    @GET
+    @Path("usuario/{id}")
+    public Response mensajesPorUsuario(@PathParam("id") Integer id) {
+        TypedQuery<Mensaje> consultaMensajePorUsuario= em.createNamedQuery("Mensaje.findByUsuario", Mensaje.class);
+        consultaMensajePorUsuario.setParameter("idUsuario", id);
+        List<Mensaje> resultado = consultaMensajePorUsuario.getResultList();
+        
+        Response.ResponseBuilder respuesta;
+        
+        if (resultado.size() > 0) { 
+            respuesta = Response.status(Response.Status.OK).entity(resultado).type(MediaType.APPLICATION_JSON);
+        } else {
+            String texto = "Usuario no posee clasificados.";
+            respuesta = Response.status(Response.Status.NOT_FOUND).entity(texto).type(MediaType.TEXT_PLAIN);
+        }
+
+        return respuesta.build();
+    }
+    
     @GET
     @Path("{from}/{to}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
