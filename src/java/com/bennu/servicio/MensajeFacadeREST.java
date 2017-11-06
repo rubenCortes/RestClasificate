@@ -104,18 +104,19 @@ public class MensajeFacadeREST extends AbstractFacade<Mensaje> {
         return super.findAll();
     }
 
-    
+
     @GET
     @Path("usuario/{id}")
     public Response mensajesPorUsuario(@PathParam("id") Integer id) {
-        TypedQuery<Mensaje> consultaMensajePorUsuario= em.createNamedQuery("Mensaje.findByUsuario", Mensaje.class);
+        TypedQuery<Mensaje> consultaMensajePorUsuario = em.createNamedQuery("Mensaje.findByUsuario", Mensaje.class);
         consultaMensajePorUsuario.setParameter("idUsuario", id);
         List<Mensaje> resultado = consultaMensajePorUsuario.getResultList();
-        
+        System.out.println("Id Usuario: " + id + ", nùmero de mensajes: " + resultado.size());
         Response.ResponseBuilder respuesta;
         
         if (resultado.size() > 0) { 
-            respuesta = Response.status(Response.Status.OK).entity(resultado).type(MediaType.APPLICATION_JSON);
+            // Response no acepta un arraylist como parametro de entrada, por lo cual, hay que convertir el arraylist en un array
+            respuesta = Response.status(Response.Status.OK).entity(resultado.toArray( new Mensaje[resultado.size()] )).type(MediaType.APPLICATION_JSON);
         } else {
             String texto = "Usuario no posee clasificados.";
             respuesta = Response.status(Response.Status.NOT_FOUND).entity(texto).type(MediaType.TEXT_PLAIN);
