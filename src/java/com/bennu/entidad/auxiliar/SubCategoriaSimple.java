@@ -15,6 +15,7 @@ public final class SubCategoriaSimple {
     
     private long idSubCategoria;
     private String nombre;
+    private long numeroMensajes;
 
 
     public SubCategoriaSimple() {
@@ -23,6 +24,7 @@ public final class SubCategoriaSimple {
     public SubCategoriaSimple(SubCategoria subCategoria) {
         this.setIdSubCategoria(subCategoria.getIdSubCategoria());
         this.setNombre(subCategoria.getNombre());
+        this.setNumeroMensajes(subCategoria.getMensajeList().size());
 
     }
 
@@ -63,6 +65,12 @@ public final class SubCategoriaSimple {
         this.nombre = nombre;
     }
 
+    public long getNumeroMensajes() {
+        return numeroMensajes;
+    }
 
+    public void setNumeroMensajes(long numeroMensajes) {
+        this.numeroMensajes = numeroMensajes;
+    }
 
 }

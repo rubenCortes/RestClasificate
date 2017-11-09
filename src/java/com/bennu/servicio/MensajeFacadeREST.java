@@ -111,7 +111,7 @@ public class MensajeFacadeREST extends AbstractFacade<Mensaje> {
         TypedQuery<Mensaje> consultaMensajePorUsuario = em.createNamedQuery("Mensaje.findByUsuario", Mensaje.class);
         consultaMensajePorUsuario.setParameter("idUsuario", id);
         List<Mensaje> resultado = consultaMensajePorUsuario.getResultList();
-        System.out.println("Id Usuario: " + id + ", nùmero de mensajes: " + resultado.size());
+        // System.out.println("Id Usuario: " + id + ", nùmero de mensajes: " + resultado.size());
         Response.ResponseBuilder respuesta;
         
         if (resultado.size() > 0) { 
@@ -119,6 +119,26 @@ public class MensajeFacadeREST extends AbstractFacade<Mensaje> {
             respuesta = Response.status(Response.Status.OK).entity(resultado.toArray( new Mensaje[resultado.size()] )).type(MediaType.APPLICATION_JSON);
         } else {
             String texto = "Usuario no posee clasificados.";
+            respuesta = Response.status(Response.Status.NOT_FOUND).entity(texto).type(MediaType.TEXT_PLAIN);
+        }
+
+        return respuesta.build();
+    }
+    
+    @GET
+    @Path("subcategoria/{id}")
+    public Response mensajesPorSubCategoria(@PathParam("id") Integer id) {
+        TypedQuery<Mensaje> consultaMensajePorSubCategoria = em.createNamedQuery("Mensaje.findBySubCategoria", Mensaje.class);
+        consultaMensajePorSubCategoria.setParameter("idSubCategoria", id);
+        List<Mensaje> resultado = consultaMensajePorSubCategoria.getResultList();
+        // System.out.println("Id Usuario: " + id + ", nùmero de mensajes: " + resultado.size());
+        Response.ResponseBuilder respuesta;
+        
+        if (resultado.size() > 0) { 
+            // Response no acepta un arraylist como parametro de entrada, por lo cual, hay que convertir el arraylist en un array
+            respuesta = Response.status(Response.Status.OK).entity(resultado.toArray( new Mensaje[resultado.size()] )).type(MediaType.APPLICATION_JSON);
+        } else {
+            String texto = "No hay clasificados en esta categoría.";
             respuesta = Response.status(Response.Status.NOT_FOUND).entity(texto).type(MediaType.TEXT_PLAIN);
         }
 
