@@ -18,14 +18,25 @@ public final class PaisSimple {
     private long idPais;
     private String nombre;
     private List<EstadoRegionSimple> estadoRegionList;
+    private long idCat;
+    private long idSubCat;
+
 
     public PaisSimple(){
     }
 
     public PaisSimple(Pais pais){
+        this(pais, 0, 0);
+    }
+    
+    
+    public PaisSimple(Pais pais, long idCat, long idSubCat) {
+        this.idCat = idCat;
+        this.idSubCat = idSubCat;
         this.setIdPais(pais.getIdPais());
         this.setNombre(pais.getNombre());
         this.setEstadoRegionList(pais.getEstadoRegionList());
+
     }
     
     
@@ -51,7 +62,7 @@ public final class PaisSimple {
 
     public void setEstadoRegionList(List<EstadoRegion> estadoRegionLista) {
         List<EstadoRegionSimple> lista = new ArrayList<>();
-        estadoRegionLista.forEach(elemento -> lista.add( new EstadoRegionSimple(elemento) ));
+        estadoRegionLista.forEach(elemento -> lista.add( new EstadoRegionSimple(elemento, this.idCat, this.idSubCat) ));
         this.estadoRegionList = lista;
     }
     

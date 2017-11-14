@@ -40,7 +40,14 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Mensaje.findByCreacion", query = "SELECT m FROM Mensaje m WHERE m.creacion = :creacion")
     , @NamedQuery(name = "Mensaje.findByContenido", query = "SELECT m FROM Mensaje m WHERE m.contenido = :contenido")
     , @NamedQuery(name = "Mensaje.findByUsuario", query = "SELECT m FROM Mensaje m WHERE m.usuario.idUsuario = :idUsuario")
-    , @NamedQuery(name = "Mensaje.findBySubCategoria", query = "SELECT m FROM Mensaje m WHERE m.subCategoria.idSubCategoria = :idSubCategoria")})
+    , @NamedQuery(name = "Mensaje.findByCategoria", query = "SELECT m FROM Mensaje m WHERE m.subCategoria.categoria.idCategoria = :idCategoria")
+    , @NamedQuery(name = "Mensaje.findBySubCategoria", query = "SELECT m FROM Mensaje m WHERE m.subCategoria.idSubCategoria = :idSubCategoria")
+    , @NamedQuery(name = "Mensaje.findByPoblacion", query = "SELECT m FROM Mensaje m WHERE m.usuario.poblacion.idPoblacion = :idPoblacion")
+    , @NamedQuery(name = "Mensaje.findByEstado", query = "SELECT m FROM Mensaje m WHERE m.usuario.poblacion.estadoRegion.idEstadoRegion = :idEstadoRegion")
+    , @NamedQuery(name = "Mensaje.findByCatEst", query = "SELECT m FROM Mensaje m WHERE m.subCategoria.categoria.idCategoria = :idCategoria and m.usuario.poblacion.estadoRegion.idEstadoRegion = :idEstadoRegion")
+    , @NamedQuery(name = "Mensaje.findByCatPob", query = "SELECT m FROM Mensaje m WHERE m.subCategoria.categoria.idCategoria = :idCategoria and m.usuario.poblacion.idPoblacion = :idPoblacion")
+    , @NamedQuery(name = "Mensaje.findBySubCatEst", query = "SELECT m FROM Mensaje m WHERE m.subCategoria.idSubCategoria = :idSubCategoria and m.usuario.poblacion.estadoRegion.idEstadoRegion = :idEstadoRegion")
+    , @NamedQuery(name = "Mensaje.findBySubCatPob", query = "SELECT m FROM Mensaje m WHERE m.subCategoria.idSubCategoria = :idSubCategoria and m.usuario.poblacion.idPoblacion = :idPoblacion")})
 public class Mensaje implements Serializable {
 
     private static final long serialVersionUID = 1L;

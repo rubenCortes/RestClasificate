@@ -7,9 +7,11 @@ package com.bennu.servicio;
 
 import com.bennu.entidad.Mensaje;
 import com.bennu.entidad.Usuario;
+import com.bennu.entidad.auxiliar.RespuestaFiltro;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -23,6 +25,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
@@ -104,7 +107,74 @@ public class MensajeFacadeREST extends AbstractFacade<Mensaje> {
         return super.findAll();
     }
 
-
+    @GET
+    @Path("filtro")
+    @Consumes({MediaType.APPLICATION_JSON})
+    public Response mensajesFiltrados (
+            @QueryParam("cat") long cat,
+            @QueryParam("sub") long sub, 
+            @QueryParam("est") long est, 
+            @QueryParam("pob") long pob,
+            @QueryParam("can") long can) {
+        
+        
+        List<Mensaje> resultado = new ArrayList<>();
+        
+        if ( cat > 0 && sub == 0 && est == 0 && pob == 0 ) {
+            TypedQuery<Mensaje> consulta = em.createNamedQuery("Mensaje.findByCategoria", Mensaje.class);
+            consulta.setParameter("idCategoria", cat);
+            resultado = consulta.getResultList();
+        } else if ( cat > 0 && sub == 0 && est > 0 && pob == 0 ) {
+            TypedQuery<Mensaje> consulta = em.createNamedQuery("Mensaje.findByCatEst", Mensaje.class);
+            consulta.setParameter("idCategoria", cat);
+            consulta.setParameter("idEstadoRegion ", est);
+            resultado = consulta.getResultList();
+        } else if ( cat > 0 && sub == 0 && pob > 0 ) {
+            TypedQuery<Mensaje> consulta = em.createNamedQuery("Mensaje.findByCatPob", Mensaje.class);
+            consulta.setParameter("idCategoria", cat);
+            consulta.setParameter("idPoblacion", pob);
+            resultado = consulta.getResultList();
+        } else if ( sub > 0 && est == 0 && pob == 0 ) { 
+            TypedQuery<Mensaje> consulta = em.createNamedQuery("Mensaje.findBySubCategoria", Mensaje.class);
+            consulta.setParameter("idSubCategoria", sub); 
+            resultado = consulta.getResultList();
+        } else if ( sub > 0 && est > 0 && pob == 0 ) {
+            TypedQuery<Mensaje> consulta = em.createNamedQuery("Mensaje.findBySubCatEst", Mensaje.class);
+            consulta.setParameter("idSubCategoria", sub);
+            consulta.setParameter("idEstadoRegion", est);
+            resultado = consulta.getResultList();
+        } else if ( sub > 0 && pob > 0 ) {
+            TypedQuery<Mensaje> consulta = em.createNamedQuery("Mensaje.findBySubCatPob", Mensaje.class);
+            consulta.setParameter("idSubCategoria", sub);
+            consulta.setParameter("idPoblacion", pob);
+            resultado = consulta.getResultList();
+        } else if ( cat == 0 && sub == 0 && pob > 0 ) {
+            TypedQuery<Mensaje> consulta = em.createNamedQuery("Mensaje.findByPoblacion", Mensaje.class);
+            consulta.setParameter("idPoblacion", pob);
+            resultado = consulta.getResultList();
+        } else if ( cat == 0 && sub == 0 && est > 0 && pob == 0 ) {
+            TypedQuery<Mensaje> consulta = em.createNamedQuery("Mensaje.findByEstado", Mensaje.class);
+            consulta.setParameter("idEstadoRegion", est);
+            resultado = consulta.getResultList();
+        } else {
+            TypedQuery<Mensaje> consulta = em.createNamedQuery("Mensaje.findAll", Mensaje.class);
+            resultado = consulta.getResultList();
+        }
+        
+        Response.ResponseBuilder respuesta;
+        
+        if (resultado.size() > 0) { 
+            System.out.println("Registros encontados: " + resultado.size());
+            // Response no acepta un arraylist como parametro de entrada, por lo cual, hay que convertir el arraylist en un array
+            respuesta = Response.status(Response.Status.OK).entity(resultado.toArray( new Mensaje[resultado.size()] )).type(MediaType.APPLICATION_JSON);
+        } else {
+            String texto = "Registros no encontrados.";
+            respuesta = Response.status(Response.Status.NOT_FOUND).entity(texto).type(MediaType.TEXT_PLAIN);
+        }
+        return respuesta.build();
+    }
+    
+    
     @GET
     @Path("usuario/{id}")
     public Response mensajesPorUsuario(@PathParam("id") Integer id) {
@@ -124,6 +194,7 @@ public class MensajeFacadeREST extends AbstractFacade<Mensaje> {
 
         return respuesta.build();
     }
+    
     
     @GET
     @Path("subcategoria/{id}")

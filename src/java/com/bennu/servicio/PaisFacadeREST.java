@@ -21,6 +21,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
@@ -81,7 +82,7 @@ public class PaisFacadeREST extends AbstractFacade<Pais> {
 
     @GET
     @Path("{id}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public Pais find(@PathParam("id") Integer id) {
         return super.find(id);
     }
@@ -108,7 +109,11 @@ public class PaisFacadeREST extends AbstractFacade<Pais> {
     @GET
     @Path("nombre/{nombre}")
     //@Produces({MediaType.APPLICATION_JSON})
-    public Response getPaisPorNombre(@PathParam("nombre") String nombre) {
+    public Response getPaisPorNombre(
+            @PathParam("nombre") String nombre,
+            @QueryParam("cat") long cat,
+            @QueryParam("subcat") long subCat
+            ) {
         
         try {
             
@@ -117,7 +122,8 @@ public class PaisFacadeREST extends AbstractFacade<Pais> {
             ResponseBuilder respuesta;
 
             if (resultado.size() > 0) {
-                PaisSimple paisPorNombre = new PaisSimple(resultado.get(0));
+                PaisSimple paisPorNombre = new PaisSimple(resultado.get(0), cat, subCat );
+            
                 respuesta = Response.status(Status.OK).entity(paisPorNombre).type(MediaType.APPLICATION_JSON);
             } else {
                 String mensaje = "Pais : "+ nombre +" no encontrado";
@@ -135,7 +141,7 @@ public class PaisFacadeREST extends AbstractFacade<Pais> {
 
     @GET
     @Path("{from}/{to}")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public List<Pais> findRange(@PathParam("from") Integer from, @PathParam("to") Integer to) {
         return super.findRange(new int[]{from, to});
     }

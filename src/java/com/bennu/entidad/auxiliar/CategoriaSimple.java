@@ -19,6 +19,9 @@ public final class CategoriaSimple {
     private long idCategoria;
     private String nombre;
     private List<SubCategoriaSimple> subCategoriaLista;
+    private int numeroMensajes;
+
+
 
     public CategoriaSimple() {
     }
@@ -27,7 +30,13 @@ public final class CategoriaSimple {
         this.setIdCategoria(categoria.getIdCategoria());
         this.setNombre(categoria.getNombre());
         this.setSubCategoriaLista(categoria.getSubCategoriaList());
+        List<Integer> contenido = new ArrayList<>();
+        categoria.getSubCategoriaList().forEach(subCat -> contenido.add(subCat.getMensajeList().size()));
+        this.numeroMensajes = contenido.stream().mapToInt(Integer::intValue).sum();
+
+
     }
+    
     
     
     /**
@@ -76,4 +85,13 @@ public final class CategoriaSimple {
         subCategoriaLista.forEach(elemento -> lista.add( new SubCategoriaSimple(elemento) ));
         this.subCategoriaLista = lista;
     }
+    
+    public int getNumeroMensajes() {
+        return numeroMensajes;
+    }
+
+    public void setNumeroMensajes(int numeroMensajes) {
+        this.numeroMensajes = numeroMensajes;
+    }
+    
 }
